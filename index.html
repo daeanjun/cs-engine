@@ -944,4 +944,12 @@ function globalSearch(svc) {
   box.innerHTML='<div style="font-size:11px;color:var(--gray-500);margin-bottom:8px">'+results.length+'개 항목 발견</div>';
   results.slice(0,50).forEach(r=>{
     const lbCls=svc==='ems'?'lb-ems-faq':'lb-faq';
-    const
+    const div=document.createElement('div');
+    div.className='gs-item'+(svc==='ems'?' ems-item':'');
+    div.innerHTML='<span class="gs-label '+lbCls+'">'+r.type+'</span>'+r.text.replace(/\n/g,'<br>');
+    box.appendChild(div);
+  });
+}
+</script>
+</body>
+</html>
