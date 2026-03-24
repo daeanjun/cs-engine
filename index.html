@@ -28,18 +28,18 @@ body{font-family:'Segoe UI',-apple-system,sans-serif;background:#f7f4fb;color:va
 .hdate{font-size:10.5px;color:var(--gray-500);}
 
 /* SERVICE SELECTOR */
-.svc-bar{background:#fff;border-bottom:2px solid var(--gray-200);padding:0 16px;display:flex;gap:0;overflow-x:auto;}
+.svc-bar{background:#fff;border-bottom:2px solid var(--gray-200);padding:0 16px;display:flex;gap:0;overflow-x:auto;position:sticky;top:64px;z-index:99;}
 .svc-btn{padding:14px 20px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:700;white-space:nowrap;
   border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .18s;display:flex;align-items:center;gap:7px;color:var(--gray-500);}
 .svc-btn:hover{background:var(--gray-50);}
 .svc-btn.ems-active{color:var(--ems-red);border-bottom-color:var(--ems-red);background:var(--ems-red-bg);}
-.svc-btn.yun-active{color:var(--yun-green);border-bottom-color:var(--yun-orange);background:var(--yun-green-bg);}
+.svc-btn.yun-active{color:var(--yun-green);border-bottom-color:var(--yun-green);background:var(--yun-green-bg);}
 .svc-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
 .dot-ems{background:var(--ems-red);}
 .dot-yun{background:var(--yun-green);}
 
 /* TAB BAR */
-.tab-bar{background:var(--gray-50);border-bottom:1px solid var(--gray-200);padding:0 12px;display:flex;overflow-x:auto;}
+.tab-bar{background:var(--gray-50);border-bottom:1px solid var(--gray-200);padding:0 12px;display:flex;overflow-x:auto;position:sticky;top:112px;z-index:98;}
 .tab-btn{padding:10px 15px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--gray-500);
   white-space:nowrap;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:all .15s;}
 .tab-btn:hover{color:var(--gray-900);}
