@@ -1,0 +1,26 @@
+{
+  "ems": [
+    "service_overview",
+    "sendable_items",
+    "tracking",
+    "comp_amount",
+    "comp_rules",
+    "faq",
+    "regions",
+    "country_cond",
+    "contract"
+  ],
+  "yun": [
+    "countries",
+    "std_rates",
+    "us_normal",
+    "us_cosmetics",
+    "prohibited",
+    "brands",
+    "eu_vat",
+    "size_guide",
+    "us_remote",
+    "guide",
+    "insurance"
+  ]
+}
