@@ -1085,6 +1085,7 @@ function _parseCSVLine(line) {
 }
 
 function _parseCSV(text) {
+  text = text.replace(/^\uFEFF/, '');
   const lines = text.split(/\r?\n/);
   if (!lines.length) return [];
   const headers = _parseCSVLine(lines[0]);
