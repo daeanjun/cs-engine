@@ -224,6 +224,15 @@ tr:hover td{background:var(--ics-purple-bg);}
 .sdiv{font-size:11.5px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.8px;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
 .sdiv::after{content:'';flex:1;height:1px;background:var(--gray-200);}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+.tab-bar::-webkit-scrollbar-button,
+.svc-bar::-webkit-scrollbar-button,
+.tab-bar::-webkit-scrollbar-button:start,
+.tab-bar::-webkit-scrollbar-button:end {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
 </style>
 </head>
 <body>
@@ -1050,6 +1059,8 @@ function globalSearch(svc) {
   });
 }
 </script>
+<script>
+
 
 
 
@@ -1223,5 +1234,7 @@ function sfInitAll() {
 
 // ── BOOT ──
 _loadAllData();
+
+</script>
 </body>
 </html>
