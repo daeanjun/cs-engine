@@ -1,0 +1,53 @@
+{
+  "version": "2026-03",
+  "services": {
+    "ems": {
+      "name": "EMS / 국제우편",
+      "color": "#c0392b",
+      "files": {
+        "service_overview": "서비스 개요 및 기본 정보",
+        "sendable_items": "발송 가능/불가/확인필요 품목",
+        "tracking_inquiry": "행방조회 및 행방조사 청구",
+        "compensation_amount": "손해배상 금액 기준표",
+        "compensation_rules": "손해배상 규정 및 절차",
+        "faq": "자주 묻는 질문",
+        "region_classification": "EMS 지역 구분 및 국가",
+        "special_shipping_fee": "특별운송수수료 안내",
+        "country_conditions": "주요 국가별 발송조건",
+        "contract_info": "EMS 이용계약 안내"
+      }
+    },
+    "yunexpress": {
+      "name": "윤익스프레스 (YunExpress)",
+      "color": "#1a6b45",
+      "files": {
+        "countries": "서비스 국가 및 배송기간",
+        "standard_rates": "표준운임 (KRTHZXR)",
+        "us_normal_rates": "미국직항 일반화물 운임 (KRBKZXR)",
+        "us_cosmetics_rates": "미국직항 화장품 운임 (KRMUZXR)",
+        "prohibited_items": "발송제한·불가 품목",
+        "brand_list": "발송금지 브랜드 리스트",
+        "eu_vat": "EU VAT 세율",
+        "size_guide": "국가별 사이즈 가이드",
+        "us_remote_fee": "미국 격오지 추가요금",
+        "service_guide": "서비스 가이드 전문",
+        "insurance": "보험 서비스 안내"
+      }
+    },
+    "sf": {
+      "name": "SF Express (홍콩·싱가포르)",
+      "color": "#e31837",
+      "files": {
+        "cs_contact": "연락처 및 조회 링크",
+        "service_overview": "서비스 개요",
+        "schedule": "출발 스케줄 및 리드타임",
+        "restricted_items": "발송 제한 품목",
+        "customs_storage": "통관 및 창고료",
+        "return_policy": "반송·수취 거부",
+        "compensation": "배상 규정",
+        "packing_guide": "포장 및 발송 절차",
+        "faq": "자주 묻는 질문"
+      }
+    }
+  }
+}
