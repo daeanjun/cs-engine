@@ -305,6 +305,24 @@ tr:hover td{background:var(--ics-purple-bg);}
         </div>
         <div id="us-tw" class="tw" style="display:none"><table><thead><tr><th>무게(kg)</th><th>운임(KRW)</th></tr></thead><tbody id="us-tb"></tbody></table></div>
       </div>
+      <div class="card oa">
+        <div class="ctop">
+          <div class="ct">📌 격오지(Remote Area) 전체 운임표</div>
+          <div style="display:flex;gap:7px;align-items:center">
+            <select id="ur-ts" style="width:130px">
+              <option value="3구역_USD">3구역</option>
+              <option value="4구역_USD">4구역</option>
+              <option value="5구역_USD">5구역</option>
+              <option value="7구역_USD">7구역</option>
+              <option value="8구역_USD">8구역</option>
+              <option value="9구역_USD">9구역</option>
+            </select>
+            <button class="btn bo" onclick="showRemoteTable()">보기</button>
+          </div>
+        </div>
+        <div class="alert alert-o" style="font-size:11.5px">📢 격오지 추가요금은 기본 운임 외 별도 청구됩니다. 구역은 배송 주소에 따라 자동 결정됩니다.</div>
+        <div id="ur-tw" class="tw" style="display:none"><table><thead><tr><th style="background:var(--ics-orange);color:#111;">무게(kg)</th><th style="background:var(--ics-orange);color:#111;">할증요금(USD)</th></tr></thead><tbody id="ur-tb"></tbody></table></div>
+      </div>
       <div class="card"><div class="ct" style="margin-bottom:11px">💡 추가비용 안내</div>
         <div class="tw"><table><thead><tr><th>항목</th><th>요금</th></tr></thead><tbody>
           <tr><td>성수기 추가요금(2025/11/1~2026/1/31)</td><td class="pc">KRW 1,600/KG</td></tr>
@@ -708,19 +726,7 @@ function findW(rates, w, field) {
   return rates[rates.length-1];
 }
 
-// ── INIT ──
-(function init(){
-  // YUN 국가 select
-  const sel = document.getElementById('rc');
-  YUN.countries.forEach(c=>{
-    const o=document.createElement('option'); o.value=c['국가코드']; o.text=c['국가명']+' ('+c['국가코드']+')'; sel.appendChild(o);
-  });
-  document.getElementById('brand-badge').textContent = YUN.brands.length+'개';
-  // 초기 렌더
-  searchItems(); searchBrands(); searchVAT(); searchSize();
-  renderEMSItems(); renderComp(); renderRules(); renderFAQ(); renderTracking();
-  renderCountryCond(); renderRegions(); renderContract();
-})();
+// ── INIT: loadAllCSVs().then(initApp) 에서 처리되므로 즉시실행 불필요 ──
 
 // ══ YUN FUNCTIONS ══
 function searchRate() {
@@ -775,8 +781,20 @@ function searchRemote() {
   if(!w){alert('무게를 입력하세요.');return;}
   let found=null; for(const r of YUN.us_remote) if(parseFloat(r['무게_kg'])>=w){found=r;break;}
   if(!found) found=YUN.us_remote[YUN.us_remote.length-1];
-  document.getElementById('ur-rv').textContent=found[zone]?'$ '+parseFloat(found[zone]).toFixed(4)+' USD':'N/A';
+  const zoneLabel=zone.replace('_USD','');
+  document.getElementById('ur-rv').textContent=found[zone]?'$ '+parseFloat(found[zone]).toFixed(2)+' USD':'N/A';
   document.getElementById('ur-r').style.display='block';
+}
+function showRemoteTable() {
+  const zone=document.getElementById('ur-ts').value;
+  const zoneLabel=zone.replace('_USD','');
+  const tb=document.getElementById('ur-tb'); tb.innerHTML='';
+  YUN.us_remote.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>'+r['무게_kg']+' kg</td><td style="font-weight:700;color:var(--ics-orange-dk)">$ '+parseFloat(r[zone]).toFixed(2)+'</td>';
+    tb.appendChild(tr);
+  });
+  document.getElementById('ur-tw').style.display='block';
 }
 function searchItems() {
   const kw=document.getElementById('ik').value.toLowerCase();
