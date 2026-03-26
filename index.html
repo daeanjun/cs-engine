@@ -188,25 +188,15 @@ tr:hover td{background:var(--yun-teal-bg);}
 .sdiv{font-size:11.5px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.8px;margin:16px 0 9px;display:flex;align-items:center;gap:8px;}
 .sdiv::after{content:'';flex:1;height:1px;background:var(--gray-200);}
 @keyframes spin{to{transform:rotate(360deg);}}
-/* 스크롤바 화살표(버튼) 제거 */
-::-webkit-scrollbar-button {
-  display: none;
-  height: 0;
-  width: 0;
-}
+/* 스크롤바 완전 숨김 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  display: none;
+  width: 0;
+  height: 0;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--gray-300, #ccc);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-400, #aaa);
+* {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
 }
 </style>
 </head>
