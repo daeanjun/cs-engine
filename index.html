@@ -250,7 +250,8 @@ tr:hover td{background:var(--yun-teal-bg);}
     <button class="tab-btn" onclick="showTab('yun','yt5',this)">🇪🇺 EU VAT</button>
     <button class="tab-btn" onclick="showTab('yun','yt6',this)">📦 사이즈 가이드</button>
     <button class="tab-btn" onclick="showTab('yun','yt7',this)">📋 서비스 가이드</button>
-    <button class="tab-btn" onclick="showTab('yun','yt8',this)">🔍 통합 검색</button>
+    <button class="tab-btn" onclick="showTab('yun','yt8',this)">🛡️ 보험 안내</button>
+    <button class="tab-btn" onclick="showTab('yun','yt9',this)">🔍 통합 검색</button>
   </div>
   <div class="content">
     <!-- yt1: 운임조회 -->
@@ -411,8 +412,21 @@ tr:hover td{background:var(--yun-teal-bg);}
         </div>
       </div>
     </div>
-    <!-- yt8: 통합 검색 -->
+    <!-- yt8: 보험 안내 -->
     <div id="yt8" class="tab-panel">
+      <div class="strip yun"><div><h2>🛡️ 보험 서비스 안내</h2><p>Yun Express 선택적 부가 서비스 · 화물 실제 가치 기준 보상</p></div></div>
+      <div class="card oa">
+        <div class="ctop"><div class="ct">🔍 보험 내용 검색</div></div>
+        <div class="fld" style="margin-bottom:11px"><label>검색어</label><input type="text" id="ins-kw" placeholder="보험료, 보상, 신청방법, 제외 항목..." style="width:100%" oninput="searchInsurance()"></div>
+        <div id="ins-res" style="max-height:400px;overflow-y:auto"><div class="no-result">검색어를 입력하세요</div></div>
+      </div>
+      <div class="card">
+        <div class="ct" style="margin-bottom:11px">📋 전체 보험 가이드</div>
+        <div id="ins-all" style="max-height:520px;overflow-y:auto"></div>
+      </div>
+    </div>
+    <!-- yt9: 통합 검색 -->
+    <div id="yt9" class="tab-panel">
       <div class="global-search">
         <div class="gs-title">🔍 YunExpress 전체 통합 검색</div>
         <div class="gs-row">
@@ -688,6 +702,7 @@ function initApp() {
   searchItems(); searchBrands(); searchVAT(); searchSize();
   renderEMSItems(); renderComp(); renderRules(); renderFAQ(); renderTracking();
   renderCountryCond(); renderRegions(); renderContract();
+  renderInsurance();
 }
 
 // ── 앱 시작: CSV 로딩 → 초기화 ──
@@ -1000,7 +1015,34 @@ function searchOverview() {
   document.getElementById('ems-ov-res').style.display=kw?'block':'none';
 }
 
-// ══ GLOBAL SEARCH ══
+function renderInsurance() {
+  const box=document.getElementById('ins-all');
+  if(!box||!YUN.insurance||!YUN.insurance.length) return;
+  box.innerHTML='';
+  let isSection=false;
+  YUN.insurance.forEach(ins=>{
+    const txt=ins['내용']||'';
+    const isHead=/^[※①②③④⑤⑥⑦⑧⑨⑩≫]/.test(txt)||txt.length<30;
+    if(isHead){
+      box.innerHTML+='<div class="sdiv">'+txt+'</div>';
+    } else {
+      box.innerHTML+='<div style="padding:8px 12px;border-left:3px solid var(--yun-teal);border-radius:0 6px 6px 0;background:var(--gray-50);margin-bottom:4px;font-size:12.5px;line-height:1.65;color:var(--gray-700)">'+txt+'</div>';
+    }
+  });
+}
+function searchInsurance() {
+  const kw=document.getElementById('ins-kw').value.toLowerCase();
+  const box=document.getElementById('ins-res');
+  if(!kw){box.innerHTML='<div class="no-result">검색어를 입력하세요</div>';return;}
+  if(!YUN.insurance||!YUN.insurance.length){box.innerHTML='<div class="no-result">데이터 로딩 중...</div>';return;}
+  const res=YUN.insurance.filter(ins=>(ins['내용']||'').toLowerCase().includes(kw));
+  if(!res.length){box.innerHTML='<div class="no-result">검색 결과 없음</div>';return;}
+  box.innerHTML='<div style="font-size:11px;color:var(--gray-500);margin-bottom:8px">'+res.length+'개 항목</div>';
+  res.forEach(ins=>{
+    box.innerHTML+='<div style="padding:8px 11px;border-left:3px solid var(--yun-teal);border-radius:0 5px 5px 0;background:var(--yun-teal-bg);margin-bottom:3px;font-size:12.5px;line-height:1.65;color:var(--gray-700)">'+hl(ins['내용'],kw)+'</div>';
+  });
+}
+
 function globalSearch(svc) {
   const kw=document.getElementById(svc+'-gs').value.toLowerCase();
   const box=document.getElementById(svc+'-gs-result');
