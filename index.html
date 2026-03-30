@@ -252,6 +252,8 @@ tr:hover td{background:var(--yun-teal-bg);}
     <button class="tab-btn" onclick="showTab('yun','yt7',this)">📋 서비스 가이드</button>
     <button class="tab-btn" onclick="showTab('yun','yt8',this)">🛡️ 보험 안내</button>
     <button class="tab-btn" onclick="showTab('yun','yt9',this)">🔍 통합 검색</button>
+    <button class="tab-btn" onclick="showTab('yun','yt10',this)">📍 격오지 조회</button>
+    <button class="tab-btn" onclick="showTab('yun','yt11',this)">🔗 IP 조회 사이트</button>
   </div>
   <div class="content">
     <!-- yt1: 운임조회 -->
@@ -434,6 +436,43 @@ tr:hover td{background:var(--yun-teal-bg);}
           <button class="gs-btn" onclick="globalSearch('yun')">검색</button>
         </div>
         <div class="gs-result" id="yun-gs-result"></div>
+      </div>
+    </div>
+
+    <!-- yt10: 격오지 조회 -->
+    <div id="yt10" class="tab-panel">
+      <div class="section-box">
+        <div class="ctop"><div class="ct">📍 격오지(Remote Area) 우편번호 조회</div></div>
+        <div class="alert alert-o" style="font-size:11.5px">📢 해당 우편번호가 격오지(Remote Area)에 해당하는지 조회합니다. US는 구역(Zone) 및 추가요금도 함께 확인됩니다.</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+          <select id="rz-country" onchange="resetRemoteZip()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;min-width:120px">
+            <option value="US">🇺🇸 미국 (US)</option>
+            <option value="JP">🇯🇵 일본 (JP)</option>
+            <option value="GB">🇬🇧 영국 (GB)</option>
+          </select>
+          <input type="text" id="rz-input" placeholder="우편번호 입력 (예: 00601 / 900-0000 / IV)" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;flex:1;min-width:160px" oninput="searchRemoteZip()">
+          <button onclick="searchRemoteZip()" style="padding:8px 18px;background:var(--yun-purple);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600">조회</button>
+        </div>
+        <div id="rz-result" style="margin-bottom:18px"></div>
+        <div id="rz-surcharge" style="margin-bottom:10px"></div>
+      </div>
+      <div class="section-box" style="margin-top:14px">
+        <div class="ctop"><div class="ct">📋 격오지 전체 목록 보기</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <button onclick="renderRemoteZipTable('US')" style="padding:6px 16px;background:var(--yun-orange);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇺🇸 US 전체목록</button>
+          <button onclick="renderRemoteZipTable('JP')" style="padding:6px 16px;background:var(--yun-purple);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇯🇵 JP 전체목록</button>
+          <button onclick="renderRemoteZipTable('GB')" style="padding:6px 16px;background:#1565c0;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇬🇧 GB 전체목록</button>
+        </div>
+        <div id="rz-table"></div>
+      </div>
+    </div>
+
+    <!-- yt11: IP 조회 사이트 -->
+    <div id="yt11" class="tab-panel">
+      <div class="section-box">
+        <div class="ctop"><div class="ct">🔗 지적재산권(IP) 조회 사이트</div></div>
+        <div class="alert alert-o" style="font-size:11.5px">📢 브랜드 발송 전 해당 국가의 지적재산권(IP) 등록 여부를 조회하시기 바랍니다.</div>
+        <div id="ip-sites-table"></div>
       </div>
     </div>
   </div>
@@ -703,6 +742,7 @@ function initApp() {
   renderEMSItems(); renderComp(); renderRules(); renderFAQ(); renderTracking();
   renderCountryCond(); renderRegions(); renderContract();
   renderInsurance();
+  renderIpSites();
 }
 
 // ── 앱 시작: CSV 로딩 → 초기화 ──
@@ -754,6 +794,129 @@ function findW(rates, w, field) {
 }
 
 // ── INIT: loadAllCSVs().then(initApp) 에서 처리되므로 즉시실행 불필요 ──
+
+// ══ 격오지(Remote Area) 조회 함수 ══
+
+function resetRemoteZip() {
+  document.getElementById('rz-input').value = '';
+  document.getElementById('rz-result').innerHTML = '';
+  document.getElementById('rz-surcharge').innerHTML = '';
+}
+
+function searchRemoteZip() {
+  const country = document.getElementById('rz-country').value;
+  const input   = (document.getElementById('rz-input').value || '').trim().toUpperCase();
+  const resEl   = document.getElementById('rz-result');
+  const surEl   = document.getElementById('rz-surcharge');
+
+  if (!input) { resEl.innerHTML = ''; surEl.innerHTML = ''; return; }
+
+  if (country === 'US') {
+    const found = (YUN.us_remote_zip || []).find(r => r['우편번호'] === input);
+    if (found) {
+      const zone = found['구역'];
+      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--yun-orange)">우편번호 <b>${found['우편번호']}</b> (${found['State']}) → <b>${zone}구역</b></div></div>`;
+      renderUsSurchargeForZone(zone, surEl);
+    } else {
+      resEl.innerHTML = `<div class="rbox"><div class="rlbl">✅ 일반 지역</div><div class="rval" style="color:#388e3c">우편번호 <b>${input}</b> 은(는) 격오지에 해당하지 않습니다.</div></div>`;
+      surEl.innerHTML = '';
+    }
+  } else if (country === 'JP') {
+    const found = (YUN.jp_remote_zip || []).find(r => r['우편번호'].replace(/-/g,'') === input.replace(/-/g,''));
+    if (found) {
+      const regionLabel = {'오키나와':'오키나와(Okinawa)','홋카이도':'홋카이도(Hokkaido)','섬지역':'섬지역(Island)'}[found['지역']] || found['지역'];
+      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--yun-orange)">우편번호 <b>${found['우편번호']}</b> → <b>${regionLabel}</b></div></div>`;
+    } else {
+      resEl.innerHTML = `<div class="rbox"><div class="rlbl">✅ 일반 지역</div><div class="rval" style="color:#388e3c">우편번호 <b>${input}</b> 은(는) 격오지에 해당하지 않습니다.</div></div>`;
+    }
+    surEl.innerHTML = '';
+  } else if (country === 'GB') {
+    const data = YUN.gb_remote_zip || [];
+    const isRemote = data.some(r => {
+      const s = r['시작우편번호'].toUpperCase();
+      const e = r['종료우편번호'].toUpperCase();
+      // 알파벳 prefix 추출 후 범위 비교
+      const prefix = input.replace(/[0-9].*$/, '');
+      const numPart = parseInt(input.replace(/^[A-Z]+/, '')) || 0;
+      const sPrefix = s.replace(/[0-9].*$/, '');
+      const sNum   = parseInt(s.replace(/^[A-Z]+/, '')) || 0;
+      const ePrefix = e.replace(/[0-9].*$/, '');
+      const eNum   = parseInt(e.replace(/^[A-Z]+/, '')) || 0;
+      if (sPrefix !== ePrefix) {
+        return prefix === sPrefix || prefix === ePrefix;
+      }
+      return prefix === sPrefix && numPart >= sNum && numPart <= eNum;
+    });
+    if (isRemote) {
+      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--yun-orange)">우편번호 <b>${input}</b> 은(는) GB 격오지(Remote Area)에 해당합니다.</div></div>`;
+    } else {
+      resEl.innerHTML = `<div class="rbox"><div class="rlbl">✅ 일반 지역</div><div class="rval" style="color:#388e3c">우편번호 <b>${input}</b> 은(는) 격오지에 해당하지 않습니다.</div></div>`;
+    }
+    surEl.innerHTML = '';
+  }
+}
+
+function renderUsSurchargeForZone(zone, el) {
+  const data = YUN.us_remote_surcharge || [];
+  if (!data.length) { el.innerHTML = ''; return; }
+  const col = '구역' + zone;
+  const hasCol = data[0] && col in data[0];
+  if (!hasCol) { el.innerHTML = `<div class="alert alert-o">${zone}구역 추가요금 데이터가 없습니다.</div>`; return; }
+  let html = `<div style="margin-top:10px"><div style="font-weight:700;font-size:13px;margin-bottom:6px;color:var(--yun-purple)">💰 ${zone}구역 격오지 추가요금 (USD)</div>`;
+  html += '<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>무게(kg)</th><th>추가요금(USD)</th></tr></thead><tbody>';
+  data.forEach(r => {
+    html += `<tr><td>${r['무게_kg']}</td><td>${parseFloat(r[col]).toFixed(2)}</td></tr>`;
+  });
+  html += '</tbody></table></div></div>';
+  el.innerHTML = html;
+}
+
+function renderRemoteZipTable(country) {
+  const el = document.getElementById('rz-table');
+  el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--gray-400)">불러오는 중...</div>';
+  setTimeout(() => {
+    let html = '';
+    if (country === 'US') {
+      const data = YUN.us_remote_zip || [];
+      html = '<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>우편번호</th><th>State</th><th>구역</th></tr></thead><tbody>';
+      data.forEach(r => { html += `<tr><td>${r['우편번호']}</td><td>${r['State']}</td><td>${r['구역']}</td></tr>`; });
+      html += `</tbody></table></div><div style="font-size:11px;color:var(--gray-400);margin-top:4px">총 ${data.length}건</div>`;
+    } else if (country === 'JP') {
+      const data = YUN.jp_remote_zip || [];
+      const grouped = {};
+      data.forEach(r => { if (!grouped[r['지역']]) grouped[r['지역']] = []; grouped[r['지역']].push(r['우편번호']); });
+      html = '';
+      ['오키나와','홋카이도','섬지역'].forEach(region => {
+        const list = grouped[region] || [];
+        html += `<div style="margin-bottom:14px"><div style="font-weight:700;font-size:12px;color:var(--yun-purple);margin-bottom:6px">${region} (${list.length}건)</div>`;
+        html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
+        list.forEach(z => { html += `<span style="background:var(--gray-100);border-radius:4px;padding:2px 8px;font-size:11px">${z}</span>`; });
+        html += '</div></div>';
+      });
+    } else if (country === 'GB') {
+      const data = YUN.gb_remote_zip || [];
+      html = '<table class="data-table"><thead><tr><th>시작 우편번호</th><th>종료 우편번호</th></tr></thead><tbody>';
+      data.forEach(r => { html += `<tr><td>${r['시작우편번호']}</td><td>${r['종료우편번호']}</td></tr>`; });
+      html += '</tbody></table>';
+    }
+    el.innerHTML = html;
+  }, 30);
+}
+
+// ══ IP 조회 사이트 함수 ══
+
+function renderIpSites() {
+  const el = document.getElementById('ip-sites-table');
+  if (!el) return;
+  const data = YUN.ip_sites || [];
+  if (!data.length) { el.innerHTML = '<div class="no-result">데이터 로딩 중...</div>'; return; }
+  let html = '<table class="data-table"><thead><tr><th>국가</th><th>코드</th><th>조회 사이트</th></tr></thead><tbody>';
+  data.forEach(r => {
+    html += `<tr><td>${r['국가']}</td><td><b>${r['코드']}</b></td><td><a href="${r['URL']}" target="_blank" rel="noopener noreferrer" style="color:var(--yun-purple);word-break:break-all">${r['URL']}</a></td></tr>`;
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
 
 // ══ YUN FUNCTIONS ══
 function searchRate() {

@@ -21,6 +21,11 @@
     "size_guide",
     "us_remote",
     "guide",
-    "insurance"
+    "insurance",
+    "us_remote_zip",
+    "jp_remote_zip",
+    "gb_remote_zip",
+    "us_remote_surcharge",
+    "ip_sites"
   ]
 }
