@@ -158,7 +158,7 @@ tr:hover td{background:var(--yun-teal-bg);}
 .irr-img-wrap{background:#e8e8e8;display:flex;align-items:center;justify-content:center;height:180px;overflow:hidden;}
 .irr-img{width:100%;height:100%;object-fit:cover;}
 .irr-info{padding:10px 12px;}
-.irr-title{font-size:12.5px;font-weight:700;color:var(--yun-purple);margin-bottom:4px;}
+.irr-title{font-size:12.5px;font-weight:700;color:var(--ics-purple);margin-bottom:4px;}
 .irr-desc{font-size:11px;color:var(--gray-500);line-height:1.5;}
 .ic{background:var(--gray-50);border-radius:8px;padding:11px;border:1px solid var(--gray-200);}
 .ic .lb{font-size:10px;color:var(--gray-500);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
@@ -460,7 +460,7 @@ tr:hover td{background:var(--yun-teal-bg);}
             <option value="GB">🇬🇧 영국 (GB)</option>
           </select>
           <input type="text" id="rz-input" placeholder="우편번호 입력 (예: 00601 / 900-0000 / IV)" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;flex:1;min-width:160px" oninput="searchRemoteZip()">
-          <button onclick="searchRemoteZip()" style="padding:8px 18px;background:var(--yun-purple);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600">조회</button>
+          <button onclick="searchRemoteZip()" style="padding:8px 18px;background:var(--ics-purple);color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600">조회</button>
         </div>
         <div id="rz-result" style="margin-bottom:18px"></div>
         <div id="rz-surcharge" style="margin-bottom:10px"></div>
@@ -468,8 +468,8 @@ tr:hover td{background:var(--yun-teal-bg);}
       <div class="section-box" style="margin-top:14px">
         <div class="ctop"><div class="ct">📋 격오지 전체 목록 보기</div></div>
         <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-          <button onclick="renderRemoteZipTable('US')" style="padding:6px 16px;background:var(--yun-orange);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇺🇸 US 전체목록</button>
-          <button onclick="renderRemoteZipTable('JP')" style="padding:6px 16px;background:var(--yun-purple);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇯🇵 JP 전체목록</button>
+          <button onclick="renderRemoteZipTable('US')" style="padding:6px 16px;background:var(--ics-orange);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇺🇸 US 전체목록</button>
+          <button onclick="renderRemoteZipTable('JP')" style="padding:6px 16px;background:var(--ics-purple);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇯🇵 JP 전체목록</button>
           <button onclick="renderRemoteZipTable('GB')" style="padding:6px 16px;background:#1565c0;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-weight:600">🇬🇧 GB 전체목록</button>
         </div>
         <div id="rz-table"></div>
@@ -491,7 +491,7 @@ tr:hover td{background:var(--yun-teal-bg);}
         <div class="alert alert-o" style="font-size:11.5px">
           📢 이형화물이란 일반 직육면체 박스가 아닌 특수한 형태의 화물을 말합니다. 이형화물은 <b>추가 요금이 발생</b>할 수 있으며, 발송 전 반드시 CS팀에 문의하시기 바랍니다.
         </div>
-        <div class="alert" style="background:#f3e5f5;border-left:4px solid var(--yun-purple);font-size:11.5px;margin-bottom:16px;padding:10px 14px;border-radius:6px">
+        <div class="alert" style="background:#f3e5f5;border-left:4px solid var(--ics-purple);font-size:11.5px;margin-bottom:16px;padding:10px 14px;border-radius:6px">
           📐 <b>부피무게 산정</b>: 원통형의 경우 <b>π × 반지름² × 길이 ÷ 5,000</b> 으로 산출합니다. 이형화물은 실중량과 부피무게 중 높은 값으로 과금됩니다.
         </div>
         <div class="irr-grid">
@@ -901,7 +901,7 @@ function searchRemoteZip() {
     const found = (YUN.us_remote_zip || []).find(r => r['우편번호'] === input);
     if (found) {
       const zone = found['구역'];
-      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--yun-orange)">우편번호 <b>${found['우편번호']}</b> (${found['State']}) → <b>${zone}구역</b></div></div>`;
+      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--ics-orange)">우편번호 <b>${found['우편번호']}</b> (${found['State']}) → <b>${zone}구역</b></div></div>`;
       renderUsSurchargeForZone(zone, surEl);
     } else {
       resEl.innerHTML = `<div class="rbox"><div class="rlbl">✅ 일반 지역</div><div class="rval" style="color:#388e3c">우편번호 <b>${input}</b> 은(는) 격오지에 해당하지 않습니다.</div></div>`;
@@ -911,7 +911,7 @@ function searchRemoteZip() {
     const found = (YUN.jp_remote_zip || []).find(r => r['우편번호'].replace(/-/g,'') === input.replace(/-/g,''));
     if (found) {
       const regionLabel = {'오키나와':'오키나와(Okinawa)','홋카이도':'홋카이도(Hokkaido)','섬지역':'섬지역(Island)'}[found['지역']] || found['지역'];
-      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--yun-orange)">우편번호 <b>${found['우편번호']}</b> → <b>${regionLabel}</b></div></div>`;
+      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--ics-orange)">우편번호 <b>${found['우편번호']}</b> → <b>${regionLabel}</b></div></div>`;
     } else {
       resEl.innerHTML = `<div class="rbox"><div class="rlbl">✅ 일반 지역</div><div class="rval" style="color:#388e3c">우편번호 <b>${input}</b> 은(는) 격오지에 해당하지 않습니다.</div></div>`;
     }
@@ -934,7 +934,7 @@ function searchRemoteZip() {
       return prefix === sPrefix && numPart >= sNum && numPart <= eNum;
     });
     if (isRemote) {
-      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--yun-orange)">우편번호 <b>${input}</b> 은(는) GB 격오지(Remote Area)에 해당합니다.</div></div>`;
+      resEl.innerHTML = `<div class="rbox rb-o"><div class="rlbl">📍 격오지 해당</div><div class="rval" style="color:var(--ics-orange)">우편번호 <b>${input}</b> 은(는) GB 격오지(Remote Area)에 해당합니다.</div></div>`;
     } else {
       resEl.innerHTML = `<div class="rbox"><div class="rlbl">✅ 일반 지역</div><div class="rval" style="color:#388e3c">우편번호 <b>${input}</b> 은(는) 격오지에 해당하지 않습니다.</div></div>`;
     }
@@ -948,7 +948,7 @@ function renderUsSurchargeForZone(zone, el) {
   const col = '구역' + zone;
   const hasCol = data[0] && col in data[0];
   if (!hasCol) { el.innerHTML = `<div class="alert alert-o">${zone}구역 추가요금 데이터가 없습니다.</div>`; return; }
-  let html = `<div style="margin-top:10px"><div style="font-weight:700;font-size:13px;margin-bottom:6px;color:var(--yun-purple)">💰 ${zone}구역 격오지 추가요금 (USD)</div>`;
+  let html = `<div style="margin-top:10px"><div style="font-weight:700;font-size:13px;margin-bottom:6px;color:var(--ics-purple)">💰 ${zone}구역 격오지 추가요금 (USD)</div>`;
   html += '<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>무게(kg)</th><th>추가요금(USD)</th></tr></thead><tbody>';
   data.forEach(r => {
     html += `<tr><td>${r['무게_kg']}</td><td>${parseFloat(r[col]).toFixed(2)}</td></tr>`;
@@ -974,7 +974,7 @@ function renderRemoteZipTable(country) {
       html = '';
       ['오키나와','홋카이도','섬지역'].forEach(region => {
         const list = grouped[region] || [];
-        html += `<div style="margin-bottom:14px"><div style="font-weight:700;font-size:12px;color:var(--yun-purple);margin-bottom:6px">${region} (${list.length}건)</div>`;
+        html += `<div style="margin-bottom:14px"><div style="font-weight:700;font-size:12px;color:var(--ics-purple);margin-bottom:6px">${region} (${list.length}건)</div>`;
         html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
         list.forEach(z => { html += `<span style="background:var(--gray-100);border-radius:4px;padding:2px 8px;font-size:11px">${z}</span>`; });
         html += '</div></div>';
@@ -998,7 +998,7 @@ function renderIpSites() {
   if (!data.length) { el.innerHTML = '<div class="no-result">데이터 로딩 중...</div>'; return; }
   let html = '<table class="data-table"><thead><tr><th>국가</th><th>코드</th><th>조회 사이트</th></tr></thead><tbody>';
   data.forEach(r => {
-    html += `<tr><td>${r['국가']}</td><td><b>${r['코드']}</b></td><td><a href="${r['URL']}" target="_blank" rel="noopener noreferrer" style="color:var(--yun-purple);word-break:break-all">${r['URL']}</a></td></tr>`;
+    html += `<tr><td>${r['국가']}</td><td><b>${r['코드']}</b></td><td><a href="${r['URL']}" target="_blank" rel="noopener noreferrer" style="color:var(--ics-purple);word-break:break-all">${r['URL']}</a></td></tr>`;
   });
   html += '</tbody></table>';
   el.innerHTML = html;
