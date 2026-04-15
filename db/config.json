@@ -1,0 +1,17 @@
+{
+  "yun": {
+    "serviceCodes": {
+      "priority": "KRTHZXR",
+      "standard": "KRBKZXR",
+      "cosmetics": "KRMUZXR"
+    },
+    "us": {
+      "leadTime": "4-9 days",
+      "leadTimeNote": "세금/유류할증료 포함"
+    }
+  },
+  "ems": {
+    "tel": "1588-1300",
+    "telPremium": "1588-5027"
+  }
+}
