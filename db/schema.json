@@ -27,5 +27,14 @@
     "gb_remote_zip",
     "us_remote_surcharge",
     "ip_sites"
+  ],
+  "sf": [
+    "service_overview",
+    "lead_time",
+    "prohibited",
+    "customs",
+    "delivery",
+    "compensation",
+    "faq"
   ]
 }
