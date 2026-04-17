@@ -137,7 +137,7 @@ function initApp() {
 
   // 초기 렌더
   searchItems(); searchBrands(); searchVAT(); searchSize();
-  renderEMSItems(); renderComp(); renderRules(); renderFAQ(); renderTracking();
+  renderEMSItems(); renderComp(); renderRules(); renderFAQ('ems'); renderTracking();
   renderCountryCond(); renderRegions(); renderContract();
   renderInsurance();
   renderIpSites();
@@ -147,7 +147,7 @@ function initApp() {
   renderSFCustoms();
   renderSFDelivery();
   renderSFComp();
-  renderSFFAQ();
+  renderFAQ('sf');
 }
 
 // ── 앱 시작: CSV 로딩 → 초기화 ──
@@ -519,29 +519,25 @@ function filterRules() {
     div.innerHTML+='<div style="padding:8px 12px;border-left:3px solid var(--ems-red);background:var(--ems-red-bg);border-radius:0 6px 6px 0;margin-bottom:4px;font-size:12.5px;line-height:1.65;">'+r['내용']+'</div>';
   });
 }
-function renderFAQ() { searchFAQ(); }
-function searchFAQ() {
-  const kw=document.getElementById('faq-kw').value.toLowerCase();
-  const cat=document.getElementById('faq-cat').value;
-  const div=document.getElementById('faq-list'); div.innerHTML='';
-  let cnt=0;
-  EMS.faq.forEach((q,i)=>{
-    if(kw&&!q['질문'].toLowerCase().includes(kw)&&!q['답변'].toLowerCase().includes(kw)) return;
-    if(cat!=='all'&&q['카테고리']!==cat) return;
-    cnt++;
-    div.innerHTML+='<div class="faq-item">'
-      +'<div class="faq-q ems-q" onclick="toggleFAQ('+i+')">'
-      +'<span>'+hl(q['질문'],kw)+'</span>'
-      +'<span><span class="badge bems faq-cat">'+q['카테고리']+'</span> ▾</span>'
-      +'</div>'
-      +'<div class="faq-a" id="faq-a-'+i+'">'+hl(q['답변'],kw)+'</div>'
-      +'</div>';
-  });
-  if(!cnt) div.innerHTML='<div class="no-result">검색 결과 없음</div>';
-}
-function toggleFAQ(i) {
-  const a=document.getElementById('faq-a-'+i);
-  a.classList.toggle('open');
+function renderFAQ(svc) {
+  const pre = svc === 'sf' ? 'sf-faq' : 'faq';
+  const kw = (document.getElementById(pre + '-kw')?.value || '').toLowerCase();
+  const cat = document.getElementById(pre + '-cat')?.value || 'all';
+  const list = document.getElementById(pre + '-list');
+  const data = svc === 'sf' ? SF.faq : EMS.faq;
+  if (!list || !data?.length) return;
+  const rows = data.filter(r =>
+    (cat === 'all' || r['카테고리'] === cat) &&
+    (!kw || (r['질문']||'').toLowerCase().includes(kw) || (r['답변']||'').toLowerCase().includes(kw))
+  );
+  if (!rows.length) { list.innerHTML = '<div class="no-result">검색 결과 없음</div>'; return; }
+  const qCls = svc === 'sf' ? 'sf-q' : 'ems-q';
+  list.innerHTML = rows.map(r => {
+    const hdr = svc === 'sf'
+      ? `<span>${hl(r['질문'],kw)}<span class="faq-cat" style="background:rgba(26,26,26,.1);color:var(--sf-black)">${r['카테고리']}</span></span><span>▾</span>`
+      : `<span>${hl(r['질문'],kw)}</span><span><span class="badge bems faq-cat">${r['카테고리']}</span> ▾</span>`;
+    return `<div class="faq-item"><div class="faq-q ${qCls}" onclick="this.nextElementSibling.classList.toggle('open')">${hdr}</div><div class="faq-a">${hl(r['답변'],kw)}</div></div>`;
+  }).join('');
 }
 function renderCountryCond() { searchCountryCond(); }
 function searchCountryCond() {
@@ -572,16 +568,23 @@ function renderContract() {
     tb.appendChild(tr);
   });
 }
-function searchOverview() {
-  const kw=document.getElementById('ems-ov-kw').value.toLowerCase();
-  const tb=document.getElementById('ems-ov-body'); tb.innerHTML='';
-  EMS.service_overview.forEach(o=>{
-    if(kw&&!o['카테고리'].toLowerCase().includes(kw)&&!o['항목'].toLowerCase().includes(kw)&&!o['내용'].toLowerCase().includes(kw)) return;
-    const tr=document.createElement('tr');
-    tr.innerHTML='<td style="font-weight:600;color:var(--ems-red)">'+hl(o['카테고리'],kw)+'</td><td style="font-weight:600">'+hl(o['항목'],kw)+'</td><td style="font-size:12.5px">'+hl(o['내용'],kw)+'</td>';
-    tb.appendChild(tr);
-  });
-  document.getElementById('ems-ov-res').style.display=kw?'block':'none';
+function searchOverview(svc) {
+  const pre = svc === 'sf' ? 'sf' : 'ems';
+  const kw = document.getElementById(pre + '-ov-kw').value.toLowerCase();
+  const res = document.getElementById(pre + '-ov-res');
+  const body = document.getElementById(pre + '-ov-body');
+  const data = svc === 'sf' ? SF.service_overview : EMS.service_overview;
+  const catStyle = svc === 'sf' ? '' : ' style="font-weight:600;color:var(--ems-red)"';
+  if (!kw) { res.style.display = 'none'; return; }
+  const rows = data.filter(r =>
+    (r['카테고리']||'').toLowerCase().includes(kw) ||
+    (r['항목']||'').toLowerCase().includes(kw) ||
+    (r['내용']||'').toLowerCase().includes(kw)
+  );
+  res.style.display = rows.length ? 'block' : 'none';
+  body.innerHTML = rows.map(r =>
+    `<tr><td${catStyle}>${hl(r['카테고리'],kw)}</td><td style="font-weight:600">${hl(r['항목'],kw)}</td><td style="font-size:12.5px">${hl(r['내용'],kw)}</td></tr>`
+  ).join('');
 }
 
 function renderInsurance() {
@@ -615,23 +618,6 @@ function searchInsurance() {
 // ══════════════════════════════════════
 // SF Express 렌더링 함수
 // ══════════════════════════════════════
-
-function searchSFOverview() {
-  const kw = document.getElementById('sf-ov-kw').value.toLowerCase();
-  const res = document.getElementById('sf-ov-res');
-  const body = document.getElementById('sf-ov-body');
-  if(!kw){res.style.display='none';return;}
-  const rows = SF.service_overview.filter(r =>
-    (r['카테고리']||'').toLowerCase().includes(kw)||
-    (r['항목']||'').toLowerCase().includes(kw)||
-    (r['내용']||'').toLowerCase().includes(kw)
-  );
-  if(!rows.length){res.style.display='none';return;}
-  res.style.display='block';
-  body.innerHTML = rows.map(r =>
-    `<tr><td>${hl(r['카테고리'],kw)}</td><td>${hl(r['항목'],kw)}</td><td>${hl(r['내용'],kw)}</td></tr>`
-  ).join('');
-}
 
 function renderSFLeadTime() {
   const body = document.getElementById('sf-lt-body');
@@ -696,26 +682,6 @@ function searchSFComp() {
 }
 
 function renderSFComp() { searchSFComp(); }
-
-function renderSFFAQ() {
-  const kw = (document.getElementById('sf-faq-kw')?document.getElementById('sf-faq-kw').value:'').toLowerCase();
-  const cat = document.getElementById('sf-faq-cat')?document.getElementById('sf-faq-cat').value:'all';
-  const list = document.getElementById('sf-faq-list');
-  if(!SF.faq||!list) return;
-  const rows = SF.faq.filter(r=>
-    (cat==='all'||r['카테고리']===cat)&&
-    (!kw||(r['질문']||'').toLowerCase().includes(kw)||(r['답변']||'').toLowerCase().includes(kw))
-  );
-  if(!rows.length){list.innerHTML='<div class="no-result">검색 결과 없음</div>';return;}
-  list.innerHTML = rows.map((r,i)=>`
-    <div class="faq-item">
-      <div class="faq-q sf-q" onclick="this.nextElementSibling.classList.toggle('open')">
-        <span>${hl(r['질문'],kw)}<span class="faq-cat" style="background:rgba(26,26,26,.1);color:var(--sf-black)">${r['카테고리']}</span></span>
-        <span style="font-size:16px;transition:transform .2s">▾</span>
-      </div>
-      <div class="faq-a">${hl(r['답변'],kw)}</div>
-    </div>`).join('');
-}
 
 function globalSearch(svc) {
   const kw=document.getElementById(svc+'-gs').value.toLowerCase();

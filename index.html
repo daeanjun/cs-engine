@@ -401,7 +401,7 @@
       </div>
       <div class="card ra">
         <div class="ctop"><div class="ct ems-ct">📋 서비스 개요 검색</div></div>
-        <div class="row"><div class="fld"><label>키워드</label><input type="text" id="ems-ov-kw" placeholder="접수, 통관, 추적, 고객센터..." style="width:220px" oninput="searchOverview()"></div></div>
+        <div class="row"><div class="fld"><label>키워드</label><input type="text" id="ems-ov-kw" placeholder="접수, 통관, 추적, 고객센터..." style="width:220px" oninput="searchOverview('ems')"></div></div>
         <div id="ems-ov-res" class="tw" style="display:none"><table><thead><tr><th class="th-r">카테고리</th><th class="th-r">항목</th><th class="th-r">내용</th></tr></thead><tbody id="ems-ov-body"></tbody></table></div>
       </div>
       <div class="card">
@@ -462,8 +462,8 @@
     <div id="et5" class="tab-panel">
       <div class="strip ems"><div><h2>❓ EMS CS 자주 묻는 질문</h2><p>배송조회 · 서비스 · 발송제한 · 손해배상 · 통관</p></div></div>
       <div class="card ra">
-        <div class="row"><div class="fld"><label>질문 검색</label><input type="text" id="faq-kw" placeholder="분실, 배터리, 통관, 손해배상..." style="width:240px" oninput="searchFAQ()"></div>
-        <div class="fld"><label>카테고리</label><select id="faq-cat" style="width:140px" onchange="searchFAQ()"><option value="all">전체</option><option value="배송조회">배송조회</option><option value="서비스">서비스</option><option value="발송제한">발송제한</option><option value="분실/손해배상">분실/손해배상</option><option value="통관">통관</option><option value="요금">요금</option><option value="접수">접수</option><option value="포장/규격">포장/규격</option><option value="계약">계약</option></select></div></div>
+        <div class="row"><div class="fld"><label>질문 검색</label><input type="text" id="faq-kw" placeholder="분실, 배터리, 통관, 손해배상..." style="width:240px" oninput="renderFAQ('ems')"></div>
+        <div class="fld"><label>카테고리</label><select id="faq-cat" style="width:140px" onchange="renderFAQ('ems')"><option value="all">전체</option><option value="배송조회">배송조회</option><option value="서비스">서비스</option><option value="발송제한">발송제한</option><option value="분실/손해배상">분실/손해배상</option><option value="통관">통관</option><option value="요금">요금</option><option value="접수">접수</option><option value="포장/규격">포장/규격</option><option value="계약">계약</option></select></div></div>
         <div id="faq-list"></div>
       </div>
     </div>
@@ -534,7 +534,7 @@
       <div class="card sfa">
         <div class="ctop"><div class="ct sf-ct">📋 서비스 개요 검색</div></div>
         <div class="row">
-          <div class="fld"><label>키워드</label><input type="text" id="sf-ov-kw" placeholder="리드타임, 거점, 스케줄, 고객센터..." style="width:220px" oninput="searchSFOverview()"></div>
+          <div class="fld"><label>키워드</label><input type="text" id="sf-ov-kw" placeholder="리드타임, 거점, 스케줄, 고객센터..." style="width:220px" oninput="searchOverview('sf')"></div>
         </div>
         <div id="sf-ov-res" class="tw" style="display:none">
           <table><thead><tr><th style="background:var(--sf-black)">카테고리</th><th style="background:var(--sf-black)">항목</th><th style="background:var(--sf-black)">내용</th></tr></thead>
@@ -731,9 +731,9 @@
       <div class="card sfa">
         <div class="ctop"><div class="ct sf-ct">FAQ 검색</div></div>
         <div class="row">
-          <div class="fld"><label>키워드</label><input type="text" id="sf-faq-kw" placeholder="리드타임, 배터리, 통관, 보상..." style="width:200px" oninput="renderSFFAQ()"></div>
+          <div class="fld"><label>키워드</label><input type="text" id="sf-faq-kw" placeholder="리드타임, 배터리, 통관, 보상..." style="width:200px" oninput="renderFAQ('sf')"></div>
           <div class="fld"><label>카테고리</label>
-            <select id="sf-faq-cat" style="width:130px" onchange="renderSFFAQ()">
+            <select id="sf-faq-cat" style="width:130px" onchange="renderFAQ('sf')">
               <option value="all">전체</option>
               <option value="서비스">서비스</option>
               <option value="리드타임">리드타임</option>
