@@ -128,6 +128,9 @@ function initApp() {
   const overlay = document.getElementById('loading-overlay');
   if (overlay) overlay.style.display = 'none';
 
+  // EMS 국가별 발송조건 드롭다운 초기화
+  buildEmsCountryOptions(EMS_COUNTRIES);
+
   // YUN 국가 select 옵션
   const sel = document.getElementById('rc');
   YUN.countries.forEach(c=>{
@@ -186,7 +189,26 @@ function closeModal(e) {
   if (e && e.target !== document.getElementById('map-modal')) return;
   document.getElementById('map-modal').classList.remove('open');
 }
-document.addEventListener('keydown', e => { if(e.key==='Escape') document.getElementById('map-modal').classList.remove('open'); });
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') {
+    document.getElementById('map-modal').classList.remove('open');
+    closeIframeModal();
+  }
+});
+
+// ── EMS 우체국 iframe 모달 ──
+function openIframeModal(url, title) {
+  document.getElementById('epost-modal-title').textContent = title || '우체국 안내';
+  document.getElementById('epost-modal-frame').src = url;
+  document.getElementById('epost-modal-link').href = url;
+  document.getElementById('epost-modal').classList.add('open');
+}
+function closeIframeModal(e) {
+  const el = document.getElementById('epost-modal');
+  if (e && e.target !== el) return;
+  el.classList.remove('open');
+  document.getElementById('epost-modal-frame').src = '';
+}
 
 // ── HELPERS ──
 function hl(t, kw) {
@@ -721,4 +743,72 @@ function globalSearch(svc) {
     const itemCls=svc==='ems'?'gs-item ems-item':svc==='sf'?'gs-item sf-item':'gs-item';
     box.innerHTML+='<div class="'+itemCls+'" onclick="void(0)"><span class="gs-label '+lbCls+'">'+r.type+'</span> '+r.text.replace(/\n/g,'<br>')+'</div>';
   });
+}
+
+// ── EMS 국가별 발송조건 (우체국 실시간 조회) ──
+const EMS_COUNTRIES = [
+  {c:'JP',n:'일본'},{c:'HK',n:'홍콩(중국)'},{c:'CN',n:'중국'},{c:'AU',n:'오스트레일리아(호주)'},
+  {c:'US',n:'미국'},{c:'SG',n:'싱가포르'},{c:'GB',n:'영국'},{c:'FR',n:'프랑스'},
+  {c:'ES',n:'스페인(에스파니아)'},{c:'GR',n:'그리스'},{c:'NG',n:'나이지리아'},
+  {c:'NL',n:'네덜란드(네델란드)'},{c:'NP',n:'네팔'},{c:'NO',n:'노르웨이'},
+  {c:'NZ',n:'뉴질랜드'},{c:'DK',n:'덴마크'},{c:'DO',n:'도미니카공화국'},
+  {c:'DE',n:'독일'},{c:'LA',n:'라오스'},{c:'LV',n:'라트비아'},{c:'RU',n:'러시아'},
+  {c:'RO',n:'루마니아'},{c:'LU',n:'룩셈부르크'},{c:'RW',n:'르완다'},
+  {c:'LT',n:'리투아니아'},{c:'MO',n:'마카오(중국)'},{c:'MY',n:'말레이시아'},
+  {c:'MX',n:'멕시코'},{c:'MA',n:'모로코'},{c:'MU',n:'모리셔스'},
+  {c:'MZ',n:'모잠비크'},{c:'MD',n:'몰도바'},{c:'MV',n:'몰디브'},
+  {c:'MN',n:'몽골'},{c:'MM',n:'미얀마'},{c:'BH',n:'바레인'},
+  {c:'BD',n:'방글라데시'},{c:'VN',n:'베트남'},{c:'BE',n:'벨기에'},
+  {c:'BY',n:'벨라루스'},{c:'BA',n:'보스니아헤르체코비나'},{c:'BW',n:'보츠와나'},
+  {c:'BT',n:'부탄'},{c:'MK',n:'북마케도니아'},{c:'BG',n:'불가리아'},
+  {c:'BR',n:'브라질'},{c:'BN',n:'브루네이(브루나이)'},{c:'SA',n:'사우디아라비아'},
+  {c:'CY',n:'사이프러스'},{c:'LK',n:'스리랑카'},{c:'SE',n:'스웨덴'},
+  {c:'CH',n:'스위스'},{c:'SK',n:'슬로바키아'},{c:'SI',n:'슬로베니아'},
+  {c:'AE',n:'아랍에미리트연합국'},{c:'AM',n:'아르메니아'},{c:'AR',n:'아르헨티나'},
+  {c:'IE',n:'아일랜드'},{c:'AZ',n:'아제르바이잔'},{c:'AL',n:'알바니아'},
+  {c:'DZ',n:'알제리'},{c:'EE',n:'에스토니아'},{c:'EC',n:'에콰도르'},
+  {c:'ET',n:'에티오피아'},{c:'OM',n:'오만'},{c:'AT',n:'오스트리아'},
+  {c:'JO',n:'요르단'},{c:'UZ',n:'우즈베키스탄'},{c:'UA',n:'우크라이나'},
+  {c:'IR',n:'이란'},{c:'IL',n:'이스라엘'},{c:'EG',n:'이집트'},
+  {c:'IN',n:'인도'},{c:'ID',n:'인도네시아'},{c:'ZM',n:'잠비아'},
+  {c:'GE',n:'조지아'},{c:'DJ',n:'지부티'},{c:'CZ',n:'체코'},
+  {c:'CL',n:'칠레'},{c:'CV',n:'카보베르데'},{c:'KZ',n:'카자흐스탄'},
+  {c:'QA',n:'카타르'},{c:'KH',n:'캄보디아'},{c:'CA',n:'캐나다'},
+  {c:'KE',n:'케냐'},{c:'CR',n:'코스타리카'},{c:'CU',n:'쿠바'},
+  {c:'CW',n:'퀴라소'},{c:'HR',n:'크로아티아'},{c:'TH',n:'타이(태국)'},
+  {c:'TW',n:'타이완(대만)'},{c:'TZ',n:'탄자니아'},{c:'TN',n:'튀니지'},
+  {c:'TR',n:'튀르키예'},{c:'PA',n:'파나마'},{c:'PK',n:'파키스탄'},
+  {c:'PE',n:'페루'},{c:'PT',n:'포르투갈'},{c:'PL',n:'폴란드'},
+  {c:'FJ',n:'피지'},{c:'FI',n:'핀란드'},{c:'PH',n:'필리핀'},{c:'HU',n:'헝가리'}
+];
+
+function buildEmsCountryOptions(list) {
+  const sel = document.getElementById('epost-nation-select');
+  if(!sel) return;
+  sel.innerHTML = '<option value="-">— 도착국 선택 (' + list.length + '개국) —</option>';
+  list.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.c; o.textContent = c.n + ' (' + c.c + ')';
+    sel.appendChild(o);
+  });
+}
+
+function filterEmsCountries(val) {
+  const v = val.trim().toLowerCase();
+  if(!v) { buildEmsCountryOptions(EMS_COUNTRIES); return; }
+  const exact  = EMS_COUNTRIES.filter(c => c.n.toLowerCase() === v || c.c.toLowerCase() === v);
+  const starts = EMS_COUNTRIES.filter(c => (c.n.toLowerCase().startsWith(v) || c.c.toLowerCase().startsWith(v)) && !exact.includes(c));
+  const rest   = EMS_COUNTRIES.filter(c => (c.n.toLowerCase().includes(v) || c.c.toLowerCase().includes(v)) && !exact.includes(c) && !starts.includes(c));
+  const list = [...exact, ...starts, ...rest];
+  buildEmsCountryOptions(list);
+  const sel = document.getElementById('epost-nation-select');
+  if(sel && list.length > 0) sel.value = list[0].c;
+}
+
+function submitEmsCountryForm() {
+  const sel = document.getElementById('epost-nation-select');
+  if(!sel || sel.value === '-') { alert('도착국을 선택하세요.'); return; }
+  document.getElementById('epost-country-placeholder').style.display = 'none';
+  document.getElementById('epost-country-result').style.display = 'block';
+  document.getElementById('epost-country-form').submit();
 }
